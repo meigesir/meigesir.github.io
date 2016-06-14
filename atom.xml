@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>luck</title>
+  <subtitle>Keep Happy Every Day</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://meigesir.github.io/"/>
+  <updated>2016-06-14T19:23:22.000Z</updated>
+  <id>http://meigesir.github.io/</id>
+  
+  <author>
+    <name>meigesir</name>
+    <email>emomeild@gmail.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>collectionView 自定义 layout</title>
+    <link href="http://meigesir.github.io/2016/06/06/collectionView_custom_layout/"/>
+    <id>http://meigesir.github.io/2016/06/06/collectionView_custom_layout/</id>
+    <published>2016-06-06T06:13:54.000Z</published>
+    <updated>2016-06-14T19:23:22.000Z</updated>
+    
+    <content type="html">&lt;p&gt;自定义layout前，先来看看UICollectionView。&lt;/p&gt;
+&lt;h2 id=&quot;什么是UICollectionView&quot;&gt;&lt;a href=&quot;#什么是UICollectionView&quot; class=&quot;headerlink&quot; title=&quot;什么是UICollectionView&quot;&gt;&lt;/a&gt;什么是UICollectionView&lt;/h2&gt;&lt;p&gt;UICollectionView是一种新的数据展示方式，简单来说可以把他理解成多列的UITableView(请一定注意这是UICollectionView的最最简单的形式)。&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h2 id=&quot;结构&quot;&gt;&lt;a href=&quot;#结构&quot; class=&quot;headerlink&quot; title=&quot;结构&quot;&gt;&lt;/a&gt;结构&lt;/h2&gt;&lt;p&gt;首先回顾一下Collection View的构成，我们能看到的有三个部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cells  用于展示内容的主体，对于不同的cell可以指定不同尺寸和不同的内容&lt;br&gt;Supplementary Views 追加视图 （类似UITableView Header或者Footer）&lt;/li&gt;
+&lt;li&gt;Supplementary Views 追加视图 （类似UITableView Header或者Footer，但是只发挥了10%的功力）&lt;/li&gt;
+&lt;li&gt;Decoration Views 装饰视图 （用作背景展示）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;关于重用&quot;&gt;&lt;a href=&quot;#关于重用&quot; class=&quot;headerlink&quot; title=&quot;关于重用&quot;&gt;&lt;/a&gt;关于重用&lt;/h3&gt;&lt;p&gt;为了得到高效的View，对于cell的重用是必须的，避免了不断生成和销毁对象的操作，这与在UITableView中的情况是一致的。但值得注意的时，在UICollectionView中，不仅cell可以重用，Supplementary View和Decoration View也是可以并且应当被重用的。&lt;/p&gt;
+&lt;h3 id=&quot;关于Cell&quot;&gt;&lt;a href=&quot;#关于Cell&quot; class=&quot;headerlink&quot; title=&quot;关于Cell&quot;&gt;&lt;/a&gt;关于Cell&lt;/h3&gt;&lt;p&gt;DK提供给我们的默认的UICollectionViewCell结构上相对比较简单，由下至上：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;首先是cell本身作为容器view&lt;/li&gt;
+&lt;li&gt;然后是一个大小自动适应整个cell的backgroundView，用作cell平时的背景&lt;/li&gt;
+&lt;li&gt;再其上是selectedBackgroundView，是cell被选中时的背景&lt;/li&gt;
+&lt;li&gt;最后是一个contentView，自定义内容应被加在这个view上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;UICollectionViewLayout&quot;&gt;&lt;a href=&quot;#UICollectionViewLayout&quot; class=&quot;headerlink&quot; title=&quot;UICollectionViewLayout&quot;&gt;&lt;/a&gt;UICollectionViewLayout&lt;/h3&gt;&lt;p&gt;终于到UICollectionView的精髓了…这也是UICollectionView和UITableView最大的不同。UICollectionViewLayout可以说是UICollectionView的大脑和中枢，Layout决定了UICollectionView是如何显示在界面上的, 每个cell view、supplemental view和decoration view 都有layout属性。想要知道layouts如何灵活，只需看看 UICollectionViewLayoutAttributes 对象的特性就知道了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;frame&lt;/li&gt;
+&lt;li&gt;center&lt;/li&gt;
+&lt;li&gt;size&lt;/li&gt;
+&lt;li&gt;transform3D&lt;/li&gt;
+&lt;li&gt;alpha&lt;/li&gt;
+&lt;li&gt;zIndex&lt;/li&gt;
+&lt;li&gt;hidden&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这是最酷的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-layoutAttributesForElementsInRect:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在展示之前，一般需要生成合适的UICollectionViewLayout子类对象，并将其赋予CollectionView的collectionViewLayout属性。&lt;/p&gt;
+&lt;h3 id=&quot;自定义layout&quot;&gt;&lt;a href=&quot;#自定义layout&quot; class=&quot;headerlink&quot; title=&quot;自定义layout&quot;&gt;&lt;/a&gt;自定义layout&lt;/h3&gt;&lt;h4 id=&quot;继承UICollectionViewWaterfallLayout&quot;&gt;&lt;a href=&quot;#继承UICollectionViewWaterfallLayout&quot; class=&quot;headerlink&quot; title=&quot;继承UICollectionViewWaterfallLayout&quot;&gt;&lt;/a&gt;继承UICollectionViewWaterfallLayout&lt;/h4&gt;&lt;h5 id=&quot;理解layout的处理过程&quot;&gt;&lt;a href=&quot;#理解layout的处理过程&quot; class=&quot;headerlink&quot; title=&quot;理解layout的处理过程&quot;&gt;&lt;/a&gt;理解layout的处理过程&lt;/h5&gt;&lt;ol&gt;
+&lt;li&gt;prepareLayout  提供layout信息的一些前期准备&lt;/li&gt;
+&lt;li&gt;collectionViewContentSize  基于初始化计算得出的整个内容的size&lt;/li&gt;
+&lt;li&gt;layoutAttributesForElementsInRect: 返回在指定rectangle区域的cells和views的attributes&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;布置自定义内容:&lt;br&gt;&lt;img src=&quot;https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/Art/cv_layout_process_2x.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h5 id=&quot;创建Layout-Attributes&quot;&gt;&lt;a href=&quot;#创建Layout-Attributes&quot; class=&quot;headerlink&quot; title=&quot;创建Layout Attributes&quot;&gt;&lt;/a&gt;创建Layout Attributes&lt;/h5&gt;&lt;p&gt;用下面类方法创建UICollectionViewLayoutAttributes的类实例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-layoutAttributesForItemAtIndexPath:&lt;/li&gt;
+&lt;li&gt;-layoutAttributesForSupplementaryViewOfKind:atIndexPath:&lt;/li&gt;
+&lt;li&gt;-layoutAttributesForDecorationViewOfKind:atIndexPath:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5 id=&quot;prepareLayout&quot;&gt;&lt;a href=&quot;#prepareLayout&quot; class=&quot;headerlink&quot; title=&quot;prepareLayout&quot;&gt;&lt;/a&gt;prepareLayout&lt;/h5&gt;&lt;p&gt;layout处理前，有机会做一些初始化计算。&lt;/p&gt;
+&lt;h5 id=&quot;在给定Rectangle区域提供Items的Layout-Attributes&quot;&gt;&lt;a href=&quot;#在给定Rectangle区域提供Items的Layout-Attributes&quot; class=&quot;headerlink&quot; title=&quot;在给定Rectangle区域提供Items的Layout Attributes&quot;&gt;&lt;/a&gt;在给定Rectangle区域提供Items的Layout Attributes&lt;/h5&gt;&lt;p&gt;在layout处理流程的最后一步，collectionView将会调用layoutAttributesForElementsInRect:。目的是为和指定rectangle交叉的每一个cell和supplementary、decoration视图提供layout attributes。&lt;/p&gt;
+&lt;p&gt;布局看得见的元素：&lt;br&gt;&lt;img src=&quot;https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/Art/cv_visible_elements_2x.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h3&gt;&lt;p&gt;跟UITableView有些类似，一个UICollectionView的实现包括两个必要部分：UICollectionViewDataSource和UICollectionViewLayout，和一个交互部分：UICollectionViewDelegate。而Apple给出的UICollectionViewFlowLayout已经是一个很强力的layout方案了。&lt;/p&gt;
+&lt;h2 id=&quot;自定义layout几种实现-点击查看具体代码&quot;&gt;&lt;a href=&quot;#自定义layout几种实现-点击查看具体代码&quot; class=&quot;headerlink&quot; title=&quot;自定义layout几种实现(点击查看具体代码)&quot;&gt;&lt;/a&gt;自定义layout几种实现(&lt;a href=&quot;https://github.com/meigesir/TTCollectionView.git&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;点击查看具体代码&lt;/a&gt;)&lt;/h2&gt;&lt;h3 id=&quot;1-无限轮播&quot;&gt;&lt;a href=&quot;#1-无限轮播&quot; class=&quot;headerlink&quot; title=&quot;1. 无限轮播&quot;&gt;&lt;/a&gt;1. 无限轮播&lt;/h3&gt;&lt;p&gt;优点，相比ScrollView,可以重用cell，优化性能&lt;/p&gt;
+&lt;h4 id=&quot;实现&quot;&gt;&lt;a href=&quot;#实现&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;严格意义上说并没有自定义layout，而是使用的UICollectionViewFlowLayout，设置水平滚动方向，设置minimumLineSpacing为0&lt;/li&gt;
+&lt;li&gt;collectionView：设置pagingEnabled为YES&lt;/li&gt;
+&lt;li&gt;以上可以达到轮播的目的，无限轮播实现方式，就是在第一张轮播视图的前面插入最后一张轮播，最后一张轮播视图的后面插入第一张轮播，这样在滑动到第一个或最后一个位置的时候，分别无动画的切换到原始数据的最后一张或第一张。再加入timer定时滚动。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;2-瀑布流（CHTCollectionViewWaterfallLayout）&quot;&gt;&lt;a href=&quot;#2-瀑布流（CHTCollectionViewWaterfallLayout）&quot; class=&quot;headerlink&quot; title=&quot;2. 瀑布流（CHTCollectionViewWaterfallLayout）&quot;&gt;&lt;/a&gt;2. 瀑布流（CHTCollectionViewWaterfallLayout）&lt;/h3&gt;&lt;p&gt;瀑布流比较有代表的是app是Pinterest。特点是，每个元素都是等宽不等高，而且每当排列一个元素的时候，都是从最短的那一列开始排。这里我就不重复造轮了，因为有一个比较好的开源项目(CHTCollectionViewWaterfallLayout，注释也很充分)。但是作者有一个地方有欠缺(CHTFloorCGFloat)，但是可以忽略不计。&lt;/p&gt;
+&lt;h4 id=&quot;实现-1&quot;&gt;&lt;a href=&quot;#实现-1&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;prepareLayout&lt;br&gt;计算好每一列的高度，计算每一个元素的Layout Attributes。作者在此方法最后有一个亮点，就是将Attributes每20个分组，后面调用layoutAttributesForElementsInRect:的时候使用，可以省掉一些运算，从而优化性能。&lt;/li&gt;
+&lt;li&gt;collectionViewContentSize&lt;br&gt;算出真个内容的高度，也就是最后一个section的列的高度(最后保持一致，因为已经展示完了)&lt;/li&gt;
+&lt;li&gt;layoutAttributesForElementsInRect:&lt;br&gt;先锁定Attributes组的范围，然后再具体求解，优化了性能。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;3-弹性header&quot;&gt;&lt;a href=&quot;#3-弹性header&quot; class=&quot;headerlink&quot; title=&quot;3. 弹性header&quot;&gt;&lt;/a&gt;3. 弹性header&lt;/h3&gt;&lt;p&gt;下拉collectionView的时候，header可以被拉伸，从而可以更全面地查看图片更多细节，手势松开，又可以反弹到初始状态。&lt;/p&gt;
+&lt;h4 id=&quot;实现-2&quot;&gt;&lt;a href=&quot;#实现-2&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;展示时，在layoutAttributesForElementsInRect:方法中获取header的attributes&lt;/li&gt;
+&lt;li&gt;然后设置attributes的y和height值，从而达到相应的效果&lt;/li&gt;
+&lt;li&gt;弹性：调用collectionView的setAlwaysBounceVertical:，参数为YES&lt;/li&gt;
+&lt;li&gt;设置图片展示方式为UIViewContentModeScaleAspectFill&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;4-水平滚动放大&quot;&gt;&lt;a href=&quot;#4-水平滚动放大&quot; class=&quot;headerlink&quot; title=&quot;4. 水平滚动放大&quot;&gt;&lt;/a&gt;4. 水平滚动放大&lt;/h3&gt;&lt;p&gt;水平滚动cell，当到屏幕中间的时候，放到最大，并会自动校正位置&lt;/p&gt;
+&lt;h4 id=&quot;实现-3&quot;&gt;&lt;a href=&quot;#实现-3&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;展示时，layoutAttributesForElementsInRect:，设置每个item的Attributes，通过item中心点x和collectionView屏幕中心点的x值的间距来设置item的缩放&lt;/li&gt;
+&lt;li&gt;校正位置：重写targetContentOffsetForProposedContentOffset:withScrollingVelocity:，在item不在中心位置的时候自动居中&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;5-拖动item&quot;&gt;&lt;a href=&quot;#5-拖动item&quot; class=&quot;headerlink&quot; title=&quot;5. 拖动item&quot;&gt;&lt;/a&gt;5. 拖动item&lt;/h3&gt;&lt;p&gt;手动长按item的时候，item稍微放大一些，提示用户当前可以做出拖动操作。然后移动item，可以将item任意的移动位置。iOS9已经有相应的API支持，而且比较简单，这里为了兼容iOS7以上，所以需要自定义layout。由于也有相应的轮子LXReorderableCollectionViewFlowLayout，这里就不重新造轮子了，局限是不适用于自定义layout。&lt;/p&gt;
+&lt;h3 id=&quot;实现-4&quot;&gt;&lt;a href=&quot;#实现-4&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;添加长按手势，有可能手势冲突，比如iOS9添加长按手势实现移动元素，所以需要设置我们自定义长按手势优先级高(requireGestureRecognizerToFail:)。&lt;/li&gt;
+&lt;li&gt;长按手势开始时，基于原有item的frame创建view，添加正常、高亮时的截图，然后放到view到1.1呗；长按手势结束时，view缩放到正常大小，然后view设置nil，拖动结束；两次相应的委托调用。&lt;/li&gt;
+&lt;li&gt;拖动需要添加pan手势，拖动改变时，改变view的中心点即可。&lt;/li&gt;
+&lt;li&gt;在layoutAttributesForElementsInRect:中，判断如果是当前操作的item，Attributes的hidden设为YES，从而隐藏原有的item。&lt;/li&gt;
+&lt;li&gt;invalidateLayoutIfNecessary，实现没有操作在item上面时不生效，及其相应的删除、插入操作，及其相应的委托方法。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://nshipster.cn/uicollectionview/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UICollection​View&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://onevcat.com/2012/06/introducing-collection-views/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WWDC 2012 Session笔记——205 Introducing Collection Views&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/CreatingCustomLayouts/CreatingCustomLayouts.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Creating Custom Layouts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pandajohn.com/jin-bu-li-jie-uiscrollviewde-san-ge-shu-xing-contentoffset-contentsizeyi-ji-contentinset/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;理解UIScrollView的三个属性：contentOffset、contentSize以及contentInset&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://nrj.io/stretchy-uicollectionview-headers/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Stretchy UICollectionView headers&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;自定义layout前，先来看看UICollectionView。&lt;/p&gt;
+&lt;h2 id=&quot;什么是UICollectionView&quot;&gt;&lt;a href=&quot;#什么是UICollectionView&quot; class=&quot;headerlink&quot; title=&quot;什么是UICollectionView&quot;&gt;&lt;/a&gt;什么是UICollectionView&lt;/h2&gt;&lt;p&gt;UICollectionView是一种新的数据展示方式，简单来说可以把他理解成多列的UITableView(请一定注意这是UICollectionView的最最简单的形式)。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="collectionView" scheme="http://meigesir.github.io/categories/collectionView/"/>
+    
+    
+      <category term="layout" scheme="http://meigesir.github.io/tags/layout/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>swift网站资源收集</title>
+    <link href="http://meigesir.github.io/2015/01/24/swift-site-gather/"/>
+    <id>http://meigesir.github.io/2015/01/24/swift-site-gather/</id>
+    <published>2015-01-24T06:13:54.000Z</published>
+    <updated>2016-06-14T18:02:00.000Z</updated>
+    
+    <content type="html">&lt;p&gt;只保证收集到的绝对是干货，毕竟博主免不了会忽略掉一些干货，欢迎各位告知~&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h2 id=&quot;swift语言学习&quot;&gt;&lt;a href=&quot;#swift语言学习&quot; class=&quot;headerlink&quot; title=&quot;swift语言学习&quot;&gt;&lt;/a&gt;swift语言学习&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://numbbbbb.gitbooks.io/-the-swift-programming-language-/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;swift官方语言教程翻译中文版&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;对swift语言一定理解后，可以看下大牛王巍的&lt;a href=&quot;http://swifter.tips/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;100个tips&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;swift工具站点&quot;&gt;&lt;a href=&quot;#swift工具站点&quot; class=&quot;headerlink&quot; title=&quot;swift工具站点&quot;&gt;&lt;/a&gt;swift工具站点&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.swifttoolbox.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Swift ToolBox&lt;/a&gt;: 收录使用Swift所写的资源库&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://swiftdoc.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Swift 在线文档&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;IOS系统学习的站点&quot;&gt;&lt;a href=&quot;#IOS系统学习的站点&quot; class=&quot;headerlink&quot; title=&quot;IOS系统学习的站点&quot;&gt;&lt;/a&gt;IOS系统学习的站点&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;NSHipster：主要涉及IOS开发容易忽视的点: &lt;a href=&quot;http://nshipster.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;中文版&lt;/a&gt;    &lt;a href=&quot;http://nshipster.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;英文版&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;objc：系统学习IOS开发的好地方: &lt;a href=&quot;http://objccn.io&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;中文版&lt;/a&gt;    &lt;a href=&quot;http://www.objc.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;英文版&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;swift周订阅&quot;&gt;&lt;a href=&quot;#swift周订阅&quot; class=&quot;headerlink&quot; title=&quot;swift周订阅&quot;&gt;&lt;/a&gt;swift周订阅&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://iosdevweekly.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Dev Weekly&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://swiftsandbox.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Swift Sandbox&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;tutorial&quot;&gt;&lt;a href=&quot;#tutorial&quot; class=&quot;headerlink&quot; title=&quot;tutorial&quot;&gt;&lt;/a&gt;tutorial&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.appcoda.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AppCoda&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developer.apple.com/videos/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WWDC Session Videos&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;只保证收集到的绝对是干货，毕竟博主免不了会忽略掉一些干货，欢迎各位告知~&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Swift" scheme="http://meigesir.github.io/categories/Swift/"/>
+    
+    
+      <category term="gather" scheme="http://meigesir.github.io/tags/gather/"/>
+    
+  </entry>
+  
+</feed>
