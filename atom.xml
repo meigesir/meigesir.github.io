@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://meigesir.github.io/"/>
-  <updated>2016-06-14T19:23:22.000Z</updated>
+  <updated>2016-06-15T16:00:51.000Z</updated>
   <id>http://meigesir.github.io/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>collectionView 自定义 layout</title>
+    <title>collectionView自定义layout</title>
     <link href="http://meigesir.github.io/2016/06/06/collectionView_custom_layout/"/>
     <id>http://meigesir.github.io/2016/06/06/collectionView_custom_layout/</id>
     <published>2016-06-06T06:13:54.000Z</published>
-    <updated>2016-06-14T19:23:22.000Z</updated>
+    <updated>2016-06-15T16:00:51.000Z</updated>
     
     <content type="html">&lt;p&gt;自定义layout前，先来看看UICollectionView。&lt;/p&gt;
 &lt;h2 id=&quot;什么是UICollectionView&quot;&gt;&lt;a href=&quot;#什么是UICollectionView&quot; class=&quot;headerlink&quot; title=&quot;什么是UICollectionView&quot;&gt;&lt;/a&gt;什么是UICollectionView&lt;/h2&gt;&lt;p&gt;UICollectionView是一种新的数据展示方式，简单来说可以把他理解成多列的UITableView(请一定注意这是UICollectionView的最最简单的形式)。&lt;/p&gt;
@@ -70,31 +70,37 @@
 &lt;h5 id=&quot;在给定Rectangle区域提供Items的Layout-Attributes&quot;&gt;&lt;a href=&quot;#在给定Rectangle区域提供Items的Layout-Attributes&quot; class=&quot;headerlink&quot; title=&quot;在给定Rectangle区域提供Items的Layout Attributes&quot;&gt;&lt;/a&gt;在给定Rectangle区域提供Items的Layout Attributes&lt;/h5&gt;&lt;p&gt;在layout处理流程的最后一步，collectionView将会调用layoutAttributesForElementsInRect:。目的是为和指定rectangle交叉的每一个cell和supplementary、decoration视图提供layout attributes。&lt;/p&gt;
 &lt;p&gt;布局看得见的元素：&lt;br&gt;&lt;img src=&quot;https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/Art/cv_visible_elements_2x.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;h3 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h3&gt;&lt;p&gt;跟UITableView有些类似，一个UICollectionView的实现包括两个必要部分：UICollectionViewDataSource和UICollectionViewLayout，和一个交互部分：UICollectionViewDelegate。而Apple给出的UICollectionViewFlowLayout已经是一个很强力的layout方案了。&lt;/p&gt;
-&lt;h2 id=&quot;自定义layout几种实现-点击查看具体代码&quot;&gt;&lt;a href=&quot;#自定义layout几种实现-点击查看具体代码&quot; class=&quot;headerlink&quot; title=&quot;自定义layout几种实现(点击查看具体代码)&quot;&gt;&lt;/a&gt;自定义layout几种实现(&lt;a href=&quot;https://github.com/meigesir/TTCollectionView.git&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;点击查看具体代码&lt;/a&gt;)&lt;/h2&gt;&lt;h3 id=&quot;1-无限轮播&quot;&gt;&lt;a href=&quot;#1-无限轮播&quot; class=&quot;headerlink&quot; title=&quot;1. 无限轮播&quot;&gt;&lt;/a&gt;1. 无限轮播&lt;/h3&gt;&lt;p&gt;优点，相比ScrollView,可以重用cell，优化性能&lt;/p&gt;
+&lt;h2 id=&quot;自定义layout几种实现-点击查看具体代码&quot;&gt;&lt;a href=&quot;#自定义layout几种实现-点击查看具体代码&quot; class=&quot;headerlink&quot; title=&quot;自定义layout几种实现(点击查看具体代码)&quot;&gt;&lt;/a&gt;自定义layout几种实现(&lt;a href=&quot;https://github.com/meigesir/TTCollectionView.git&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;点击查看具体代码&lt;/a&gt;)&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;https://github.com/meigesir/TTCollectionView/raw/master/Resources/home.gif&quot; alt=&quot;自定义layout&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;1-无限轮播&quot;&gt;&lt;a href=&quot;#1-无限轮播&quot; class=&quot;headerlink&quot; title=&quot;1. 无限轮播&quot;&gt;&lt;/a&gt;1. 无限轮播&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://github.com/meigesir/TTCollectionView/raw/master/Resources/InfiniteCarouse.gif&quot; alt=&quot;无限轮播&quot;&gt;&lt;/p&gt;
+&lt;p&gt;优点，相比ScrollView,可以重用cell，优化性能&lt;/p&gt;
 &lt;h4 id=&quot;实现&quot;&gt;&lt;a href=&quot;#实现&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;严格意义上说并没有自定义layout，而是使用的UICollectionViewFlowLayout，设置水平滚动方向，设置minimumLineSpacing为0&lt;/li&gt;
 &lt;li&gt;collectionView：设置pagingEnabled为YES&lt;/li&gt;
 &lt;li&gt;以上可以达到轮播的目的，无限轮播实现方式，就是在第一张轮播视图的前面插入最后一张轮播，最后一张轮播视图的后面插入第一张轮播，这样在滑动到第一个或最后一个位置的时候，分别无动画的切换到原始数据的最后一张或第一张。再加入timer定时滚动。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&quot;2-瀑布流（CHTCollectionViewWaterfallLayout）&quot;&gt;&lt;a href=&quot;#2-瀑布流（CHTCollectionViewWaterfallLayout）&quot; class=&quot;headerlink&quot; title=&quot;2. 瀑布流（CHTCollectionViewWaterfallLayout）&quot;&gt;&lt;/a&gt;2. 瀑布流（CHTCollectionViewWaterfallLayout）&lt;/h3&gt;&lt;p&gt;瀑布流比较有代表的是app是Pinterest。特点是，每个元素都是等宽不等高，而且每当排列一个元素的时候，都是从最短的那一列开始排。这里我就不重复造轮了，因为有一个比较好的开源项目(CHTCollectionViewWaterfallLayout，注释也很充分)。但是作者有一个地方有欠缺(CHTFloorCGFloat)，但是可以忽略不计。&lt;/p&gt;
+&lt;h3 id=&quot;2-瀑布流（CHTCollectionViewWaterfallLayout）&quot;&gt;&lt;a href=&quot;#2-瀑布流（CHTCollectionViewWaterfallLayout）&quot; class=&quot;headerlink&quot; title=&quot;2. 瀑布流（CHTCollectionViewWaterfallLayout）&quot;&gt;&lt;/a&gt;2. 瀑布流（CHTCollectionViewWaterfallLayout）&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://github.com/meigesir/TTCollectionView/raw/master/Resources/WaterFall.gif&quot; alt=&quot;瀑布流&quot;&gt;&lt;/p&gt;
+&lt;p&gt;瀑布流比较有代表的是app是Pinterest。特点是，每个元素都是等宽不等高，而且每当排列一个元素的时候，都是从最短的那一列开始排。这里我就不重复造轮了，因为有一个比较好的开源项目(CHTCollectionViewWaterfallLayout，注释也很充分)。但是作者有一个地方有欠缺(CHTFloorCGFloat)，但是可以忽略不计。&lt;/p&gt;
 &lt;h4 id=&quot;实现-1&quot;&gt;&lt;a href=&quot;#实现-1&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;prepareLayout&lt;br&gt;计算好每一列的高度，计算每一个元素的Layout Attributes。作者在此方法最后有一个亮点，就是将Attributes每20个分组，后面调用layoutAttributesForElementsInRect:的时候使用，可以省掉一些运算，从而优化性能。&lt;/li&gt;
 &lt;li&gt;collectionViewContentSize&lt;br&gt;算出真个内容的高度，也就是最后一个section的列的高度(最后保持一致，因为已经展示完了)&lt;/li&gt;
 &lt;li&gt;layoutAttributesForElementsInRect:&lt;br&gt;先锁定Attributes组的范围，然后再具体求解，优化了性能。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&quot;3-弹性header&quot;&gt;&lt;a href=&quot;#3-弹性header&quot; class=&quot;headerlink&quot; title=&quot;3. 弹性header&quot;&gt;&lt;/a&gt;3. 弹性header&lt;/h3&gt;&lt;p&gt;下拉collectionView的时候，header可以被拉伸，从而可以更全面地查看图片更多细节，手势松开，又可以反弹到初始状态。&lt;/p&gt;
+&lt;h3 id=&quot;3-弹性header&quot;&gt;&lt;a href=&quot;#3-弹性header&quot; class=&quot;headerlink&quot; title=&quot;3. 弹性header&quot;&gt;&lt;/a&gt;3. 弹性header&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://github.com/meigesir/TTCollectionView/raw/master/Resources/StretchyHeader.gif&quot; alt=&quot;弹性header&quot;&gt;&lt;/p&gt;
+&lt;p&gt;下拉collectionView的时候，header可以被拉伸，从而可以更全面地查看图片更多细节，手势松开，又可以反弹到初始状态。&lt;/p&gt;
 &lt;h4 id=&quot;实现-2&quot;&gt;&lt;a href=&quot;#实现-2&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;展示时，在layoutAttributesForElementsInRect:方法中获取header的attributes&lt;/li&gt;
 &lt;li&gt;然后设置attributes的y和height值，从而达到相应的效果&lt;/li&gt;
 &lt;li&gt;弹性：调用collectionView的setAlwaysBounceVertical:，参数为YES&lt;/li&gt;
 &lt;li&gt;设置图片展示方式为UIViewContentModeScaleAspectFill&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&quot;4-水平滚动放大&quot;&gt;&lt;a href=&quot;#4-水平滚动放大&quot; class=&quot;headerlink&quot; title=&quot;4. 水平滚动放大&quot;&gt;&lt;/a&gt;4. 水平滚动放大&lt;/h3&gt;&lt;p&gt;水平滚动cell，当到屏幕中间的时候，放到最大，并会自动校正位置&lt;/p&gt;
+&lt;h3 id=&quot;4-水平滚动放大&quot;&gt;&lt;a href=&quot;#4-水平滚动放大&quot; class=&quot;headerlink&quot; title=&quot;4. 水平滚动放大&quot;&gt;&lt;/a&gt;4. 水平滚动放大&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://github.com/meigesir/TTCollectionView/raw/master/Resources/SlideZoomIn.gif&quot; alt=&quot;水平滚动放大&quot;&gt;&lt;/p&gt;
+&lt;p&gt;水平滚动cell，当到屏幕中间的时候，放到最大，并会自动校正位置&lt;/p&gt;
 &lt;h4 id=&quot;实现-3&quot;&gt;&lt;a href=&quot;#实现-3&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;展示时，layoutAttributesForElementsInRect:，设置每个item的Attributes，通过item中心点x和collectionView屏幕中心点的x值的间距来设置item的缩放&lt;/li&gt;
 &lt;li&gt;校正位置：重写targetContentOffsetForProposedContentOffset:withScrollingVelocity:，在item不在中心位置的时候自动居中&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&quot;5-拖动item&quot;&gt;&lt;a href=&quot;#5-拖动item&quot; class=&quot;headerlink&quot; title=&quot;5. 拖动item&quot;&gt;&lt;/a&gt;5. 拖动item&lt;/h3&gt;&lt;p&gt;手动长按item的时候，item稍微放大一些，提示用户当前可以做出拖动操作。然后移动item，可以将item任意的移动位置。iOS9已经有相应的API支持，而且比较简单，这里为了兼容iOS7以上，所以需要自定义layout。由于也有相应的轮子LXReorderableCollectionViewFlowLayout，这里就不重新造轮子了，局限是不适用于自定义layout。&lt;/p&gt;
+&lt;h3 id=&quot;5-拖动item&quot;&gt;&lt;a href=&quot;#5-拖动item&quot; class=&quot;headerlink&quot; title=&quot;5. 拖动item&quot;&gt;&lt;/a&gt;5. 拖动item&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://github.com/meigesir/TTCollectionView/raw/master/Resources/ReOrder.gif&quot; alt=&quot;拖动排序item&quot;&gt;&lt;/p&gt;
+&lt;p&gt;手动长按item的时候，item稍微放大一些，提示用户当前可以做出拖动操作。然后移动item，可以将item任意的移动位置。iOS9已经有相应的API支持，而且比较简单，这里为了兼容iOS7以上，所以需要自定义layout。由于也有相应的轮子LXReorderableCollectionViewFlowLayout，这里就不重新造轮子了，局限是不适用于自定义layout。&lt;/p&gt;
 &lt;h3 id=&quot;实现-4&quot;&gt;&lt;a href=&quot;#实现-4&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;添加长按手势，有可能手势冲突，比如iOS9添加长按手势实现移动元素，所以需要设置我们自定义长按手势优先级高(requireGestureRecognizerToFail:)。&lt;/li&gt;
 &lt;li&gt;长按手势开始时，基于原有item的frame创建view，添加正常、高亮时的截图，然后放到view到1.1呗；长按手势结束时，view缩放到正常大小，然后view设置nil，拖动结束；两次相应的委托调用。&lt;/li&gt;

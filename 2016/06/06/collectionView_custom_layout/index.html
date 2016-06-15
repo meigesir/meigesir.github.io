@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>collectionView 自定义 layout | luck</title>
+    <title>collectionView自定义layout | luck</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="meigesir">
@@ -16,7 +16,7 @@
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="meigesir" />
-    <meta name="twitter:title" content="collectionView 自定义 layout | luck" />
+    <meta name="twitter:title" content="collectionView自定义layout | luck" />
       
     
     
@@ -73,7 +73,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/06/06/collectionView_custom_layout/" title="collectionView 自定义 layout" itemprop="url">collectionView 自定义 layout</a>
+      <a href="/2016/06/06/collectionView_custom_layout/" title="collectionView自定义layout" itemprop="url">collectionView自定义layout</a>
   </h1>
   <p class="article-author">By
     
@@ -139,31 +139,37 @@
 <h5 id="在给定Rectangle区域提供Items的Layout-Attributes"><a href="#在给定Rectangle区域提供Items的Layout-Attributes" class="headerlink" title="在给定Rectangle区域提供Items的Layout Attributes"></a>在给定Rectangle区域提供Items的Layout Attributes</h5><p>在layout处理流程的最后一步，collectionView将会调用layoutAttributesForElementsInRect:。目的是为和指定rectangle交叉的每一个cell和supplementary、decoration视图提供layout attributes。</p>
 <p>布局看得见的元素：<br><img src="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/Art/cv_visible_elements_2x.png" alt=""></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>跟UITableView有些类似，一个UICollectionView的实现包括两个必要部分：UICollectionViewDataSource和UICollectionViewLayout，和一个交互部分：UICollectionViewDelegate。而Apple给出的UICollectionViewFlowLayout已经是一个很强力的layout方案了。</p>
-<h2 id="自定义layout几种实现-点击查看具体代码"><a href="#自定义layout几种实现-点击查看具体代码" class="headerlink" title="自定义layout几种实现(点击查看具体代码)"></a>自定义layout几种实现(<a href="https://github.com/meigesir/TTCollectionView.git" target="_blank" rel="external">点击查看具体代码</a>)</h2><h3 id="1-无限轮播"><a href="#1-无限轮播" class="headerlink" title="1. 无限轮播"></a>1. 无限轮播</h3><p>优点，相比ScrollView,可以重用cell，优化性能</p>
+<h2 id="自定义layout几种实现-点击查看具体代码"><a href="#自定义layout几种实现-点击查看具体代码" class="headerlink" title="自定义layout几种实现(点击查看具体代码)"></a>自定义layout几种实现(<a href="https://github.com/meigesir/TTCollectionView.git" target="_blank" rel="external">点击查看具体代码</a>)</h2><p><img src="https://github.com/meigesir/TTCollectionView/raw/master/Resources/home.gif" alt="自定义layout"></p>
+<h3 id="1-无限轮播"><a href="#1-无限轮播" class="headerlink" title="1. 无限轮播"></a>1. 无限轮播</h3><p><img src="https://github.com/meigesir/TTCollectionView/raw/master/Resources/InfiniteCarouse.gif" alt="无限轮播"></p>
+<p>优点，相比ScrollView,可以重用cell，优化性能</p>
 <h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
 <li>严格意义上说并没有自定义layout，而是使用的UICollectionViewFlowLayout，设置水平滚动方向，设置minimumLineSpacing为0</li>
 <li>collectionView：设置pagingEnabled为YES</li>
 <li>以上可以达到轮播的目的，无限轮播实现方式，就是在第一张轮播视图的前面插入最后一张轮播，最后一张轮播视图的后面插入第一张轮播，这样在滑动到第一个或最后一个位置的时候，分别无动画的切换到原始数据的最后一张或第一张。再加入timer定时滚动。</li>
 </ol>
-<h3 id="2-瀑布流（CHTCollectionViewWaterfallLayout）"><a href="#2-瀑布流（CHTCollectionViewWaterfallLayout）" class="headerlink" title="2. 瀑布流（CHTCollectionViewWaterfallLayout）"></a>2. 瀑布流（CHTCollectionViewWaterfallLayout）</h3><p>瀑布流比较有代表的是app是Pinterest。特点是，每个元素都是等宽不等高，而且每当排列一个元素的时候，都是从最短的那一列开始排。这里我就不重复造轮了，因为有一个比较好的开源项目(CHTCollectionViewWaterfallLayout，注释也很充分)。但是作者有一个地方有欠缺(CHTFloorCGFloat)，但是可以忽略不计。</p>
+<h3 id="2-瀑布流（CHTCollectionViewWaterfallLayout）"><a href="#2-瀑布流（CHTCollectionViewWaterfallLayout）" class="headerlink" title="2. 瀑布流（CHTCollectionViewWaterfallLayout）"></a>2. 瀑布流（CHTCollectionViewWaterfallLayout）</h3><p><img src="https://github.com/meigesir/TTCollectionView/raw/master/Resources/WaterFall.gif" alt="瀑布流"></p>
+<p>瀑布流比较有代表的是app是Pinterest。特点是，每个元素都是等宽不等高，而且每当排列一个元素的时候，都是从最短的那一列开始排。这里我就不重复造轮了，因为有一个比较好的开源项目(CHTCollectionViewWaterfallLayout，注释也很充分)。但是作者有一个地方有欠缺(CHTFloorCGFloat)，但是可以忽略不计。</p>
 <h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><ol>
 <li>prepareLayout<br>计算好每一列的高度，计算每一个元素的Layout Attributes。作者在此方法最后有一个亮点，就是将Attributes每20个分组，后面调用layoutAttributesForElementsInRect:的时候使用，可以省掉一些运算，从而优化性能。</li>
 <li>collectionViewContentSize<br>算出真个内容的高度，也就是最后一个section的列的高度(最后保持一致，因为已经展示完了)</li>
 <li>layoutAttributesForElementsInRect:<br>先锁定Attributes组的范围，然后再具体求解，优化了性能。</li>
 </ol>
-<h3 id="3-弹性header"><a href="#3-弹性header" class="headerlink" title="3. 弹性header"></a>3. 弹性header</h3><p>下拉collectionView的时候，header可以被拉伸，从而可以更全面地查看图片更多细节，手势松开，又可以反弹到初始状态。</p>
+<h3 id="3-弹性header"><a href="#3-弹性header" class="headerlink" title="3. 弹性header"></a>3. 弹性header</h3><p><img src="https://github.com/meigesir/TTCollectionView/raw/master/Resources/StretchyHeader.gif" alt="弹性header"></p>
+<p>下拉collectionView的时候，header可以被拉伸，从而可以更全面地查看图片更多细节，手势松开，又可以反弹到初始状态。</p>
 <h4 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h4><ol>
 <li>展示时，在layoutAttributesForElementsInRect:方法中获取header的attributes</li>
 <li>然后设置attributes的y和height值，从而达到相应的效果</li>
 <li>弹性：调用collectionView的setAlwaysBounceVertical:，参数为YES</li>
 <li>设置图片展示方式为UIViewContentModeScaleAspectFill</li>
 </ol>
-<h3 id="4-水平滚动放大"><a href="#4-水平滚动放大" class="headerlink" title="4. 水平滚动放大"></a>4. 水平滚动放大</h3><p>水平滚动cell，当到屏幕中间的时候，放到最大，并会自动校正位置</p>
+<h3 id="4-水平滚动放大"><a href="#4-水平滚动放大" class="headerlink" title="4. 水平滚动放大"></a>4. 水平滚动放大</h3><p><img src="https://github.com/meigesir/TTCollectionView/raw/master/Resources/SlideZoomIn.gif" alt="水平滚动放大"></p>
+<p>水平滚动cell，当到屏幕中间的时候，放到最大，并会自动校正位置</p>
 <h4 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h4><ol>
 <li>展示时，layoutAttributesForElementsInRect:，设置每个item的Attributes，通过item中心点x和collectionView屏幕中心点的x值的间距来设置item的缩放</li>
 <li>校正位置：重写targetContentOffsetForProposedContentOffset:withScrollingVelocity:，在item不在中心位置的时候自动居中</li>
 </ol>
-<h3 id="5-拖动item"><a href="#5-拖动item" class="headerlink" title="5. 拖动item"></a>5. 拖动item</h3><p>手动长按item的时候，item稍微放大一些，提示用户当前可以做出拖动操作。然后移动item，可以将item任意的移动位置。iOS9已经有相应的API支持，而且比较简单，这里为了兼容iOS7以上，所以需要自定义layout。由于也有相应的轮子LXReorderableCollectionViewFlowLayout，这里就不重新造轮子了，局限是不适用于自定义layout。</p>
+<h3 id="5-拖动item"><a href="#5-拖动item" class="headerlink" title="5. 拖动item"></a>5. 拖动item</h3><p><img src="https://github.com/meigesir/TTCollectionView/raw/master/Resources/ReOrder.gif" alt="拖动排序item"></p>
+<p>手动长按item的时候，item稍微放大一些，提示用户当前可以做出拖动操作。然后移动item，可以将item任意的移动位置。iOS9已经有相应的API支持，而且比较简单，这里为了兼容iOS7以上，所以需要自定义layout。由于也有相应的轮子LXReorderableCollectionViewFlowLayout，这里就不重新造轮子了，局限是不适用于自定义layout。</p>
 <h3 id="实现-4"><a href="#实现-4" class="headerlink" title="实现"></a>实现</h3><ol>
 <li>添加长按手势，有可能手势冲突，比如iOS9添加长按手势实现移动元素，所以需要设置我们自定义长按手势优先级高(requireGestureRecognizerToFail:)。</li>
 <li>长按手势开始时，基于原有item的frame创建view，添加正常、高亮时的截图，然后放到view到1.1呗；长按手势结束时，view缩放到正常大小，然后view设置nil，拖动结束；两次相应的委托调用。</li>
@@ -198,7 +204,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://meigesir.github.io/2016/06/06/collectionView_custom_layout/" data-title="collectionView 自定义 layout | luck" data-tsina="null" class="share clearfix">
+  <div data-url="http://meigesir.github.io/2016/06/06/collectionView_custom_layout/" data-title="collectionView自定义layout | luck" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
