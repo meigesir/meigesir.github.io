@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://meigesir.github.io/"/>
-  <updated>2016-06-15T16:02:28.000Z</updated>
+  <updated>2016-06-16T14:36:45.000Z</updated>
   <id>http://meigesir.github.io/</id>
   
   <author>
@@ -20,23 +20,23 @@
     <link href="http://meigesir.github.io/2016/06/06/collectionView_custom_layout/"/>
     <id>http://meigesir.github.io/2016/06/06/collectionView_custom_layout/</id>
     <published>2016-06-06T06:13:54.000Z</published>
-    <updated>2016-06-15T16:02:28.000Z</updated>
+    <updated>2016-06-16T14:36:45.000Z</updated>
     
     <content type="html">&lt;p&gt;自定义layout前，先来看看UICollectionView。&lt;/p&gt;
 &lt;h2 id=&quot;什么是UICollectionView&quot;&gt;&lt;a href=&quot;#什么是UICollectionView&quot; class=&quot;headerlink&quot; title=&quot;什么是UICollectionView&quot;&gt;&lt;/a&gt;什么是UICollectionView&lt;/h2&gt;&lt;p&gt;UICollectionView是一种新的数据展示方式，简单来说可以把他理解成多列的UITableView(请一定注意这是UICollectionView的最最简单的形式)。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h2 id=&quot;结构&quot;&gt;&lt;a href=&quot;#结构&quot; class=&quot;headerlink&quot; title=&quot;结构&quot;&gt;&lt;/a&gt;结构&lt;/h2&gt;&lt;p&gt;首先回顾一下Collection View的构成，我们能看到的有三个部分：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Cells  用于展示内容的主体，对于不同的cell可以指定不同尺寸和不同的内容&lt;br&gt;Supplementary Views 追加视图 （类似UITableView Header或者Footer）&lt;/li&gt;
+&lt;li&gt;Cells 用于展示内容的主体，对于不同的cell可以指定不同尺寸和不同的内容&lt;/li&gt;
 &lt;li&gt;Supplementary Views 追加视图 （类似UITableView Header或者Footer，但是只发挥了10%的功力）&lt;/li&gt;
 &lt;li&gt;Decoration Views 装饰视图 （用作背景展示）&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&quot;关于重用&quot;&gt;&lt;a href=&quot;#关于重用&quot; class=&quot;headerlink&quot; title=&quot;关于重用&quot;&gt;&lt;/a&gt;关于重用&lt;/h3&gt;&lt;p&gt;为了得到高效的View，对于cell的重用是必须的，避免了不断生成和销毁对象的操作，这与在UITableView中的情况是一致的。但值得注意的时，在UICollectionView中，不仅cell可以重用，Supplementary View和Decoration View也是可以并且应当被重用的。&lt;/p&gt;
-&lt;h3 id=&quot;关于Cell&quot;&gt;&lt;a href=&quot;#关于Cell&quot; class=&quot;headerlink&quot; title=&quot;关于Cell&quot;&gt;&lt;/a&gt;关于Cell&lt;/h3&gt;&lt;p&gt;DK提供给我们的默认的UICollectionViewCell结构上相对比较简单，由下至上：&lt;/p&gt;
+&lt;h3 id=&quot;关于Cell&quot;&gt;&lt;a href=&quot;#关于Cell&quot; class=&quot;headerlink&quot; title=&quot;关于Cell&quot;&gt;&lt;/a&gt;关于Cell&lt;/h3&gt;&lt;p&gt;SDK提供给我们的默认的UICollectionViewCell结构上相对比较简单，由下至上：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;首先是cell本身作为容器view&lt;/li&gt;
 &lt;li&gt;然后是一个大小自动适应整个cell的backgroundView，用作cell平时的背景&lt;/li&gt;
-&lt;li&gt;再其上是selectedBackgroundView，是cell被选中时的背景&lt;/li&gt;
+&lt;li&gt;在其上是selectedBackgroundView，是cell被选中时的背景&lt;/li&gt;
 &lt;li&gt;最后是一个contentView，自定义内容应被加在这个view上&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&quot;UICollectionViewLayout&quot;&gt;&lt;a href=&quot;#UICollectionViewLayout&quot; class=&quot;headerlink&quot; title=&quot;UICollectionViewLayout&quot;&gt;&lt;/a&gt;UICollectionViewLayout&lt;/h3&gt;&lt;p&gt;终于到UICollectionView的精髓了…这也是UICollectionView和UITableView最大的不同。UICollectionViewLayout可以说是UICollectionView的大脑和中枢，Layout决定了UICollectionView是如何显示在界面上的, 每个cell view、supplemental view和decoration view 都有layout属性。想要知道layouts如何灵活，只需看看 UICollectionViewLayoutAttributes 对象的特性就知道了：&lt;/p&gt;
@@ -54,7 +54,7 @@
 &lt;li&gt;-layoutAttributesForElementsInRect:&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;在展示之前，一般需要生成合适的UICollectionViewLayout子类对象，并将其赋予CollectionView的collectionViewLayout属性。&lt;/p&gt;
-&lt;h3 id=&quot;自定义layout&quot;&gt;&lt;a href=&quot;#自定义layout&quot; class=&quot;headerlink&quot; title=&quot;自定义layout&quot;&gt;&lt;/a&gt;自定义layout&lt;/h3&gt;&lt;h4 id=&quot;继承UICollectionViewWaterfallLayout&quot;&gt;&lt;a href=&quot;#继承UICollectionViewWaterfallLayout&quot; class=&quot;headerlink&quot; title=&quot;继承UICollectionViewWaterfallLayout&quot;&gt;&lt;/a&gt;继承UICollectionViewWaterfallLayout&lt;/h4&gt;&lt;h5 id=&quot;理解layout的处理过程&quot;&gt;&lt;a href=&quot;#理解layout的处理过程&quot; class=&quot;headerlink&quot; title=&quot;理解layout的处理过程&quot;&gt;&lt;/a&gt;理解layout的处理过程&lt;/h5&gt;&lt;ol&gt;
+&lt;h3 id=&quot;自定义layout&quot;&gt;&lt;a href=&quot;#自定义layout&quot; class=&quot;headerlink&quot; title=&quot;自定义layout&quot;&gt;&lt;/a&gt;自定义layout&lt;/h3&gt;&lt;h4 id=&quot;继承UICollectionViewLayout&quot;&gt;&lt;a href=&quot;#继承UICollectionViewLayout&quot; class=&quot;headerlink&quot; title=&quot;继承UICollectionViewLayout&quot;&gt;&lt;/a&gt;继承UICollectionViewLayout&lt;/h4&gt;&lt;h5 id=&quot;理解layout的处理过程&quot;&gt;&lt;a href=&quot;#理解layout的处理过程&quot; class=&quot;headerlink&quot; title=&quot;理解layout的处理过程&quot;&gt;&lt;/a&gt;理解layout的处理过程&lt;/h5&gt;&lt;ol&gt;
 &lt;li&gt;prepareLayout  提供layout信息的一些前期准备&lt;/li&gt;
 &lt;li&gt;collectionViewContentSize  基于初始化计算得出的整个内容的size&lt;/li&gt;
 &lt;li&gt;layoutAttributesForElementsInRect: 返回在指定rectangle区域的cells和views的attributes&lt;/li&gt;
@@ -103,7 +103,7 @@
 &lt;p&gt;手动长按item的时候，item稍微放大一些，提示用户当前可以做出拖动操作。然后移动item，可以将item任意的移动位置。iOS9已经有相应的API支持，而且比较简单，这里为了兼容iOS7以上，所以需要自定义layout。由于也有相应的轮子LXReorderableCollectionViewFlowLayout，这里就不重新造轮子了，局限是不适用于自定义layout。&lt;/p&gt;
 &lt;h3 id=&quot;实现-4&quot;&gt;&lt;a href=&quot;#实现-4&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;添加长按手势，有可能手势冲突，比如iOS9添加长按手势实现移动元素，所以需要设置我们自定义长按手势优先级高(requireGestureRecognizerToFail:)。&lt;/li&gt;
-&lt;li&gt;长按手势开始时，基于原有item的frame创建view，添加正常、高亮时的截图，然后放到view到1.1呗；长按手势结束时，view缩放到正常大小，然后view设置nil，拖动结束；两次相应的委托调用。&lt;/li&gt;
+&lt;li&gt;长按手势开始时，基于原有item的frame创建view，添加正常、高亮时的截图，然后放大view到1.1倍；长按手势结束时，view缩放到正常大小，然后view设置nil，拖动结束；两次相应的委托调用。&lt;/li&gt;
 &lt;li&gt;拖动需要添加pan手势，拖动改变时，改变view的中心点即可。&lt;/li&gt;
 &lt;li&gt;在layoutAttributesForElementsInRect:中，判断如果是当前操作的item，Attributes的hidden设为YES，从而隐藏原有的item。&lt;/li&gt;
 &lt;li&gt;invalidateLayoutIfNecessary，实现没有操作在item上面时不生效，及其相应的删除、插入操作，及其相应的委托方法。&lt;/li&gt;
